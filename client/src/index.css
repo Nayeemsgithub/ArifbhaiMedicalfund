@@ -1,0 +1,27 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  body {
+    font-family: 'Plus Jakarta Sans', system-ui, -apple-system, sans-serif;
+    background-color: #FFFFFF;
+    color: #000000;
+    min-height: 100vh;
+  }
+
+  .font-mono {
+    font-family: 'JetBrains Mono', monospace;
+  }
+}
+
+/* Strict Clean Black & White Utilities */
+.bw-card {
+  background-color: #FFFFFF;
+  border: 1px solid #000000;
+}
+
+.bw-card-subtle {
+  background-color: #FFFFFF;
+  border: 1px solid #E5E5E5;
+}
