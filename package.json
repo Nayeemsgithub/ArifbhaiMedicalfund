@@ -2,12 +2,21 @@
   "name": "medical-portfolio-mern",
   "version": "1.0.0",
   "private": true,
+  "type": "module",
   "scripts": {
     "dev": "concurrently \"npm run server --prefix server\" \"npm run dev --prefix client\"",
     "start": "node server/index.js",
     "client": "npm run dev --prefix client",
     "server": "node server/index.js",
-    "build": "npm run build --prefix client"
+    "build": "cd client && npm install && npm run build",
+    "install:client": "cd client && npm install",
+    "install:server": "cd server && npm install"
+  },
+  "dependencies": {
+    "cors": "^2.8.5",
+    "dotenv": "^16.4.5",
+    "express": "^4.19.2",
+    "mongoose": "^8.3.2"
   },
   "devDependencies": {
     "concurrently": "^8.2.2"

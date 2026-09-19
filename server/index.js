@@ -424,6 +424,10 @@ app.get('/api/updates', (req, res) => {
   res.json(milestonesState);
 });
 
-app.listen(PORT, () => {
-  console.log(`🏥 Medical Transparency Portal Backend running on http://localhost:${PORT}`);
-});
+if (!process.env.VERCEL) {
+  app.listen(PORT, () => {
+    console.log(`🏥 Medical Transparency Portal Backend running on http://localhost:${PORT}`);
+  });
+}
+
+export default app;
