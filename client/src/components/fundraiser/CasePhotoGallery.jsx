@@ -7,30 +7,39 @@ export function CasePhotoGallery() {
   const images = [
     {
       src: "/images/arif-uniform.jpg",
-      title: "Second Officer Arif Ahmed in Uniform",
+      title: "Second Officer Arif Ahmed in Marine Uniform",
       category: "Seafaring Career",
       icon: Anchor,
       location: "Onboard M.V. Meghna Fortune",
-      description: "Arif Ahmed in official marine uniform. With over 15 years dedicated to life at sea, he successfully achieved his Class 2 certificate before sudden illness struck during voyage.",
+      description: "Arif Ahmed in official Second Officer uniform. Over 15 years at sea on international merchant vessels before sudden illness developed during his recent voyage.",
       badge: "Verified Seafarer"
     },
     {
-      src: "/images/arif-family.jpg",
-      title: "Arif Ahmed with Wife & 2 Sons",
+      src: "/images/arif-family-park.jpg",
+      title: "Family Portrait with Farhana & 2 Young Sons",
       category: "Family Portrait",
       icon: Users,
-      location: "Family Home",
-      description: "Arif alongside his wife Farhana Aktar, their 3.5-year-old elder son, and their 10-month-old infant son. His young family is his greatest strength in this medical battle.",
+      location: "With Wife & Children",
+      description: "Arif sitting alongside his wife Farhana Aktar, their 3.5-year-old elder son, and their 10-month-old baby son. His young family is his greatest anchor.",
       badge: "Family Anchor"
     },
     {
-      src: "/images/arif-baby.jpg",
+      src: "/images/arif-baby-sea.jpg",
       title: "Father & 10-Month-Old Infant Son",
-      category: "Father & Child",
+      category: "Father & Son",
       icon: Heart,
-      location: "Cherished Moments",
-      description: "Arif holding his 10-month-old baby son. A young, loving father fighting with every breath to recover and watch his two boys grow up.",
+      location: "Precious Family Moments",
+      description: "Arif holding his 10-month-old baby boy. A young, dedicated father fighting to recover and be there for his sons' future.",
       badge: "Human Story"
+    },
+    {
+      src: "/images/arif-family-outdoor.jpg",
+      title: "Arif with His Beloved Family",
+      category: "Cherished Memories",
+      icon: UserCheck,
+      location: "Family Outdoors",
+      description: "Treasured moments with his young family. Every contribution directly funds Arif's ongoing medical investigations, biopsy confirmation, and cancer care.",
+      badge: "Family Bond"
     }
   ];
 
@@ -79,7 +88,7 @@ export function CasePhotoGallery() {
         </div>
 
         {/* Dedicated Photo Grid */}
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5">
           {images.map((item, idx) => {
             const IconComponent = item.icon;
             return (
