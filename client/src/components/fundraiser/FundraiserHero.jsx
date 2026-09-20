@@ -30,7 +30,7 @@ export function FundraiserHero({ campaign, summary }) {
             </h1>
 
             <p className="text-sm sm:text-base text-neutral-700 leading-relaxed font-medium">
-              37-year-old seafarer and father of two infant sons diagnosed with metastatic malignant melanoma following repatriation from vessel <em>M.V. Meghna Fortune</em>. Live accounting ledger & verified medical documentation portal.
+              37-year-old seafarer and father of two infant sons diagnosed with metastatic malignant melanoma following repatriation from vessel <em>M.V. Meghna Fortune</em>. Urgent appeal for specialist oncology staging, IHC confirmation, and life-saving cancer care.
             </p>
 
             <div className="flex flex-wrap gap-2 pt-1 text-xs font-mono">
@@ -72,10 +72,10 @@ export function FundraiserHero({ campaign, summary }) {
           </div>
 
           <div className="flex items-center gap-4 text-xs font-mono text-neutral-600">
-            <span>Direct Accounting: <strong>100% Transparent</strong></span>
+            <span>Direct to Family: <strong>100% Direct Support</strong></span>
             <span>•</span>
-            <a href="#expenses" className="text-black font-bold hover:underline flex items-center gap-1">
-              View Itemized Ledger <ArrowDown className="h-3 w-3" />
+            <a href="#donate" className="text-black font-bold hover:underline flex items-center gap-1">
+              Donate Now <Heart className="h-3 w-3 fill-black text-black" />
             </a>
           </div>
         </div>

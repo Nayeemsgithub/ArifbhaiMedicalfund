@@ -5,13 +5,10 @@ import { FundraiserHero } from './components/fundraiser/FundraiserHero';
 import { LiveSummaryCards } from './components/dashboard/LiveSummaryCards';
 import { DonationBox } from './components/fundraiser/DonationBox';
 import { PatientPortfolio } from './components/fundraiser/PatientPortfolio';
-import { ExpenseLedgerTable } from './components/dashboard/ExpenseLedgerTable';
-import { DocumentGallery } from './components/dashboard/DocumentGallery';
 import { DonorWall } from './components/fundraiser/DonorWall';
 import { MedicalJourney } from './components/fundraiser/MedicalJourney';
 import { AdminDashboard } from './components/admin/AdminDashboard';
 import { AdminLoginModal } from './components/admin/AdminLoginModal';
-import { DocumentUploadModal } from './components/admin/DocumentUploadModal';
 import { Footer } from './components/layout/Footer';
 
 function MainContent() {
@@ -19,10 +16,8 @@ function MainContent() {
   const [summary, setSummary] = useState(null);
   const [donations, setDonations] = useState([]);
   const [expenses, setExpenses] = useState([]);
-  const [documents, setDocuments] = useState([]);
   const [milestones, setMilestones] = useState([]);
   const [loading, setLoading] = useState(true);
-  const [isUploadDocOpen, setIsUploadDocOpen] = useState(false);
 
   const fetchFundraiserData = async () => {
     try {
@@ -33,7 +28,6 @@ function MainContent() {
       setSummary(data.summary);
       setDonations(data.recentDonations || []);
       setExpenses(data.expenses || []);
-      setDocuments(data.documents || []);
       setMilestones(data.milestones || []);
     } catch (err) {
       console.error('Failed to fetch fundraiser data:', err);
@@ -62,35 +56,12 @@ function MainContent() {
     if (updatedSummary) setSummary(updatedSummary);
   };
 
-  const handleExpenseAdded = (newExpense, updatedSummary) => {
-    setExpenses((prev) => [newExpense, ...prev]);
-    if (updatedSummary) setSummary(updatedSummary);
-  };
-
-  const handleExpenseUpdated = (updatedExpense, updatedSummary) => {
-    setExpenses((prev) => prev.map((e) => (e.id === updatedExpense.id ? updatedExpense : e)));
-    if (updatedSummary) setSummary(updatedSummary);
-  };
-
-  const handleExpenseDeleted = (deletedId, updatedSummary) => {
-    setExpenses((prev) => prev.filter((e) => e.id !== deletedId));
-    if (updatedSummary) setSummary(updatedSummary);
-  };
-
-  const handleDocumentUploaded = (newDoc) => {
-    setDocuments((prev) => [newDoc, ...prev]);
-  };
-
-  const handleDocumentDeleted = (deletedId) => {
-    setDocuments((prev) => prev.filter((d) => d.id !== deletedId));
-  };
-
   if (loading && !campaign) {
     return (
       <div className="min-h-screen bg-white flex flex-col items-center justify-center space-y-4">
         <div className="h-10 w-10 rounded-full border-4 border-black border-t-transparent animate-spin" />
         <span className="text-xs font-mono font-bold text-black tracking-wider">
-          CONNECTING TO LIVE TRANSPARENCY LEDGER...
+          CONNECTING TO LIVE FUNDRAISER PORTAL...
         </span>
       </div>
     );
@@ -104,17 +75,10 @@ function MainContent() {
       {/* Admin Management Dashboard (Unlocks when logged in) */}
       <AdminDashboard
         campaign={campaign}
-        expenses={expenses}
         donations={donations}
-        documents={documents}
         onCampaignUpdated={handleCampaignUpdated}
-        onExpenseAdded={handleExpenseAdded}
-        onExpenseUpdated={handleExpenseUpdated}
-        onExpenseDeleted={handleExpenseDeleted}
         onFundAdded={handleFundAdded}
         onFundDeleted={handleFundDeleted}
-        onDocumentDeleted={handleDocumentDeleted}
-        onOpenUploadDoc={() => setIsUploadDocOpen(true)}
       />
 
       <main className="flex-grow space-y-4">
@@ -124,7 +88,7 @@ function MainContent() {
           summary={summary}
         />
 
-        {/* Live Summary Cards (Total Raised, Expenses Paid, Available Balance) */}
+        {/* Live Summary Cards (Total Raised, Case Status, Direct Beneficiary) */}
         <LiveSummaryCards
           summary={summary}
         />
@@ -139,22 +103,6 @@ function MainContent() {
           campaign={campaign}
         />
 
-        {/* Itemized Verified Medical Expenses Ledger */}
-        <ExpenseLedgerTable
-          expenses={expenses}
-          onOpenAddExpense={() => {
-            const el = document.getElementById('admin-panel');
-            if (el) el.scrollIntoView({ behavior: 'smooth' });
-          }}
-        />
-
-        {/* Medical Document & Portfolio Gallery (Verified Hospital Invoices, Pathology Scans, Biopsy Reports) */}
-        <DocumentGallery
-          documents={documents}
-          onOpenUpload={() => setIsUploadDocOpen(true)}
-          onDocumentDeleted={handleDocumentDeleted}
-        />
-
         {/* Live Community Donor & Encouragement Feed */}
         <DonorWall donations={donations} />
 
@@ -167,11 +115,6 @@ function MainContent() {
 
       {/* Modals */}
       <AdminLoginModal />
-      <DocumentUploadModal
-        isOpen={isUploadDocOpen}
-        onClose={() => setIsUploadDocOpen(false)}
-        onDocumentUploaded={handleDocumentUploaded}
-      />
     </div>
   );
 }
