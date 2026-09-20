@@ -50,10 +50,19 @@ export function DonationBox({ campaign }) {
             </p>
           </div>
 
-          <div className="flex items-center gap-2 p-3 rounded-2xl bg-neutral-100 border border-neutral-300 text-xs font-mono">
-            <ShieldCheck className="h-5 w-5 text-black shrink-0" />
+          <div className="flex items-center gap-3 p-3 rounded-2xl bg-neutral-100 border border-neutral-300 text-xs font-mono">
+            <div className="relative h-10 w-10 rounded-xl overflow-hidden border border-black shrink-0">
+              <img
+                src="/images/arif-family.jpg"
+                alt="Farhana Aktar & Arif Family"
+                className="h-full w-full object-cover"
+              />
+            </div>
             <div>
-              <span className="font-bold text-black block">Verified Recipient</span>
+              <div className="flex items-center gap-1">
+                <ShieldCheck className="h-3.5 w-3.5 text-black shrink-0" />
+                <span className="font-bold text-black block">Verified Recipient</span>
+              </div>
               <span className="text-neutral-600">Farhana Aktar (Wife)</span>
             </div>
           </div>
