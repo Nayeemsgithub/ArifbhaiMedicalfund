@@ -5,6 +5,7 @@ import { FundraiserHero } from './components/fundraiser/FundraiserHero';
 import { LiveSummaryCards } from './components/dashboard/LiveSummaryCards';
 import { DonationBox } from './components/fundraiser/DonationBox';
 import { PatientPortfolio } from './components/fundraiser/PatientPortfolio';
+import { CasePhotoGallery } from './components/fundraiser/CasePhotoGallery';
 import { DonorWall } from './components/fundraiser/DonorWall';
 import { MedicalJourney } from './components/fundraiser/MedicalJourney';
 import { AdminDashboard } from './components/admin/AdminDashboard';
@@ -127,6 +128,9 @@ function MainContent() {
         <PatientPortfolio
           campaign={campaign}
         />
+
+        {/* Dedicated Case & Family Photo Gallery */}
+        <CasePhotoGallery />
 
         {/* Live Community Donor & Encouragement Feed */}
         <DonorWall donations={donations} />

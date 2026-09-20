@@ -14,40 +14,12 @@ import {
   ArrowRight, 
   CheckCircle2,
   ChevronRight,
-  ExternalLink,
-  Maximize2,
-  X,
-  Camera
+  ExternalLink
 } from 'lucide-react';
 import { Card } from '../ui/Card';
 
 export function PatientPortfolio({ campaign }) {
   const [activeTab, setActiveTab] = useState('chronology');
-  const [selectedImage, setSelectedImage] = useState(null);
-
-  const galleryImages = [
-    {
-      src: "/images/arif-family.jpg",
-      title: "Arif Ahmed with Wife & 2 Infant Sons",
-      subtitle: "Farhana Aktar holding 10-month-old baby, elder son (3.5 yrs), and Arif",
-      tag: "Family Unit",
-      aspect: "landscape"
-    },
-    {
-      src: "/images/arif-baby.jpg",
-      title: "Arif with His 10-Month-Old Baby Son",
-      subtitle: "A young father fighting for his life to watch his children grow up",
-      tag: "Father & Son",
-      aspect: "portrait"
-    },
-    {
-      src: "/images/arif-uniform.jpg",
-      title: "Second Officer Arif Ahmed in Marine Uniform",
-      subtitle: "15-year career at sea, photographed on board M.V. Meghna Fortune",
-      tag: "Seafaring Career",
-      aspect: "portrait"
-    }
-  ];
 
   const chronology = campaign?.medicalChronology || [
     {
@@ -135,116 +107,102 @@ export function PatientPortfolio({ campaign }) {
         {/* 1. Protagonist & Seafaring Background Cards */}
         <div className="grid grid-cols-1 md:grid-cols-3 gap-5">
           {/* Card 1: Seafarer Identity */}
-          <div className="p-6 rounded-3xl bg-white border border-neutral-300 shadow-xs space-y-4 hover:border-black transition-colors flex flex-col justify-between">
-            <div className="space-y-4">
-              <div className="flex items-center gap-3">
-                <div className="relative h-14 w-14 rounded-2xl overflow-hidden border border-black shrink-0">
-                  <img
-                    src="/images/arif-uniform.jpg"
-                    alt="Arif Ahmed"
-                    className="h-full w-full object-cover"
-                  />
-                </div>
-                <div>
-                  <span className="text-[10px] font-mono uppercase text-neutral-500 block">Seafarer Profile</span>
-                  <h3 className="text-lg font-bold text-black">Arif Ahmed</h3>
-                  <span className="text-xs font-mono font-bold text-black bg-neutral-100 px-2 py-0.5 rounded border border-neutral-200">
-                    Second Officer (Class 2)
-                  </span>
-                </div>
+          <div className="p-6 rounded-3xl bg-white border border-neutral-300 shadow-xs space-y-4 hover:border-black transition-colors">
+            <div className="flex items-center gap-3">
+              <div className="h-12 w-12 rounded-2xl bg-black text-white flex items-center justify-center shrink-0">
+                <Anchor className="h-6 w-6" />
               </div>
+              <div>
+                <span className="text-[10px] font-mono uppercase text-neutral-500 block">Seafarer Profile</span>
+                <h3 className="text-lg font-bold text-black">Arif Ahmed</h3>
+                <span className="text-xs font-mono font-bold text-black bg-neutral-100 px-2 py-0.5 rounded border border-neutral-200">
+                  Second Officer (Class 2)
+                </span>
+              </div>
+            </div>
 
-              <div className="space-y-2 pt-2 text-xs font-mono border-t border-neutral-100">
-                <div className="flex justify-between py-1 border-b border-neutral-100">
-                  <span className="text-neutral-500">Age:</span>
-                  <span className="font-bold text-black">37 Years</span>
-                </div>
-                <div className="flex justify-between py-1 border-b border-neutral-100">
-                  <span className="text-neutral-500">Career Commenced:</span>
-                  <span className="font-bold text-black">2009 (15 Years at Sea)</span>
-                </div>
-                <div className="flex justify-between py-1 border-b border-neutral-100">
-                  <span className="text-neutral-500">Last Vessel:</span>
-                  <span className="font-bold text-black font-sans">M.V. Meghna Fortune</span>
-                </div>
-                <div className="flex justify-between py-1">
-                  <span className="text-neutral-500">Onboard Joining:</span>
-                  <span className="font-bold text-black">18 May 2026</span>
-                </div>
+            <div className="space-y-2 pt-2 text-xs font-mono border-t border-neutral-100">
+              <div className="flex justify-between py-1 border-b border-neutral-100">
+                <span className="text-neutral-500">Age:</span>
+                <span className="font-bold text-black">37 Years</span>
+              </div>
+              <div className="flex justify-between py-1 border-b border-neutral-100">
+                <span className="text-neutral-500">Career Commenced:</span>
+                <span className="font-bold text-black">2009 (15 Years at Sea)</span>
+              </div>
+              <div className="flex justify-between py-1 border-b border-neutral-100">
+                <span className="text-neutral-500">Last Vessel:</span>
+                <span className="font-bold text-black font-sans">M.V. Meghna Fortune</span>
+              </div>
+              <div className="flex justify-between py-1">
+                <span className="text-neutral-500">Onboard Joining:</span>
+                <span className="font-bold text-black">18 May 2026</span>
               </div>
             </div>
           </div>
 
           {/* Card 2: Crisis Timeline Summary */}
-          <div className="p-6 rounded-3xl bg-white border border-neutral-300 shadow-xs space-y-4 hover:border-black transition-colors flex flex-col justify-between">
-            <div className="space-y-4">
-              <div className="flex items-center gap-3">
-                <div className="h-14 w-14 rounded-2xl bg-neutral-100 text-black border border-neutral-300 flex items-center justify-center shrink-0">
-                  <Ship className="h-7 w-7" />
-                </div>
-                <div>
-                  <span className="text-[10px] font-mono uppercase text-neutral-500 block">Vessel Service</span>
-                  <h3 className="text-lg font-bold text-black">Timeline of Crisis</h3>
-                  <span className="text-xs font-mono text-neutral-600">Onboard to Repatriation</span>
-                </div>
+          <div className="p-6 rounded-3xl bg-white border border-neutral-300 shadow-xs space-y-4 hover:border-black transition-colors">
+            <div className="flex items-center gap-3">
+              <div className="h-12 w-12 rounded-2xl bg-neutral-100 text-black border border-neutral-300 flex items-center justify-center shrink-0">
+                <Ship className="h-6 w-6" />
               </div>
+              <div>
+                <span className="text-[10px] font-mono uppercase text-neutral-500 block">Vessel Service</span>
+                <h3 className="text-lg font-bold text-black">Timeline of Crisis</h3>
+                <span className="text-xs font-mono text-neutral-600">Onboard to Repatriation</span>
+              </div>
+            </div>
 
-              <div className="space-y-2 pt-2 text-xs font-mono border-t border-neutral-100">
-                <div className="flex justify-between py-1 border-b border-neutral-100">
-                  <span className="text-neutral-500">Onset of Illness:</span>
-                  <span className="font-bold text-black">2 August 2026</span>
-                </div>
-                <div className="flex justify-between py-1 border-b border-neutral-100">
-                  <span className="text-neutral-500">Unable to Work:</span>
-                  <span className="font-bold text-black">11 August 2026</span>
-                </div>
-                <div className="flex justify-between py-1 border-b border-neutral-100">
-                  <span className="text-neutral-500">Declared Unfit:</span>
-                  <span className="font-bold text-black">17 August 2026 (Port)</span>
-                </div>
-                <div className="flex justify-between py-1">
-                  <span className="text-neutral-500">Repatriated Sick:</span>
-                  <span className="font-bold text-black">22 August 2026</span>
-                </div>
+            <div className="space-y-2 pt-2 text-xs font-mono border-t border-neutral-100">
+              <div className="flex justify-between py-1 border-b border-neutral-100">
+                <span className="text-neutral-500">Onset of Illness:</span>
+                <span className="font-bold text-black">2 August 2026</span>
+              </div>
+              <div className="flex justify-between py-1 border-b border-neutral-100">
+                <span className="text-neutral-500">Unable to Work:</span>
+                <span className="font-bold text-black">11 August 2026</span>
+              </div>
+              <div className="flex justify-between py-1 border-b border-neutral-100">
+                <span className="text-neutral-500">Declared Unfit:</span>
+                <span className="font-bold text-black">17 August 2026 (Port)</span>
+              </div>
+              <div className="flex justify-between py-1">
+                <span className="text-neutral-500">Repatriated Sick:</span>
+                <span className="font-bold text-black">22 August 2026</span>
               </div>
             </div>
           </div>
 
           {/* Card 3: Family Support Anchor */}
-          <div className="p-6 rounded-3xl bg-white border border-neutral-300 shadow-xs space-y-4 hover:border-black transition-colors flex flex-col justify-between">
-            <div className="space-y-4">
-              <div className="flex items-center gap-3">
-                <div className="relative h-14 w-14 rounded-2xl overflow-hidden border border-black shrink-0">
-                  <img
-                    src="/images/arif-family.jpg"
-                    alt="Family"
-                    className="h-full w-full object-cover"
-                  />
-                </div>
-                <div>
-                  <span className="text-[10px] font-mono uppercase text-neutral-500 block">Family Anchor</span>
-                  <h3 className="text-lg font-bold text-black">Farhana Aktar</h3>
-                  <span className="text-xs font-mono text-neutral-600">Wife & 2 Young Sons</span>
-                </div>
+          <div className="p-6 rounded-3xl bg-white border border-neutral-300 shadow-xs space-y-4 hover:border-black transition-colors">
+            <div className="flex items-center gap-3">
+              <div className="h-12 w-12 rounded-2xl bg-black text-white flex items-center justify-center shrink-0">
+                <Users className="h-6 w-6" />
               </div>
+              <div>
+                <span className="text-[10px] font-mono uppercase text-neutral-500 block">Family Anchor</span>
+                <h3 className="text-lg font-bold text-black">Farhana Aktar</h3>
+                <span className="text-xs font-mono text-neutral-600">Wife & 2 Young Sons</span>
+              </div>
+            </div>
 
-              <div className="space-y-2 pt-2 text-xs font-mono border-t border-neutral-100">
-                <div className="flex justify-between py-1 border-b border-neutral-100">
-                  <span className="text-neutral-500">Elder Son:</span>
-                  <span className="font-bold text-black">3.5 Years Old</span>
-                </div>
-                <div className="flex justify-between py-1 border-b border-neutral-100">
-                  <span className="text-neutral-500">Baby Son:</span>
-                  <span className="font-bold text-black">10 Months Old</span>
-                </div>
-                <div className="flex justify-between py-1 border-b border-neutral-100">
-                  <span className="text-neutral-500">Direct Contact:</span>
-                  <span className="font-bold text-black">01882716449</span>
-                </div>
-                <div className="flex justify-between py-1">
-                  <span className="text-neutral-500">Location:</span>
-                  <span className="font-bold text-black font-sans">Noakhali / Dhaka</span>
-                </div>
+            <div className="space-y-2 pt-2 text-xs font-mono border-t border-neutral-100">
+              <div className="flex justify-between py-1 border-b border-neutral-100">
+                <span className="text-neutral-500">Elder Son:</span>
+                <span className="font-bold text-black">3.5 Years Old</span>
+              </div>
+              <div className="flex justify-between py-1 border-b border-neutral-100">
+                <span className="text-neutral-500">Baby Son:</span>
+                <span className="font-bold text-black">10 Months Old</span>
+              </div>
+              <div className="flex justify-between py-1 border-b border-neutral-100">
+                <span className="text-neutral-500">Direct Contact:</span>
+                <span className="font-bold text-black">01882716449</span>
+              </div>
+              <div className="flex justify-between py-1">
+                <span className="text-neutral-500">Location:</span>
+                <span className="font-bold text-black font-sans">Noakhali / Dhaka</span>
               </div>
             </div>
           </div>
@@ -436,169 +394,71 @@ export function PatientPortfolio({ campaign }) {
 
         {/* TAB 3: FAMILY IMPACT & HUMAN ANGLE */}
         {activeTab === 'family' && (
-          <div className="space-y-8">
-            {/* Story Card */}
-            <div className="p-6 sm:p-10 rounded-3xl bg-white border border-neutral-300 shadow-xs space-y-6">
-              <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 pb-4 border-b border-neutral-200">
-                <div className="flex items-center gap-3">
-                  <div className="h-11 w-11 rounded-2xl bg-black text-white flex items-center justify-center">
-                    <Heart className="h-5 w-5 fill-white" />
-                  </div>
-                  <div>
-                    <h3 className="text-lg sm:text-xl font-extrabold text-black">
-                      Family Impact & The Human Angle
-                    </h3>
-                    <p className="text-xs text-neutral-500">Farhana Aktar, their 2 infant boys, and a family fighting for survival</p>
-                  </div>
+          <div className="p-6 sm:p-10 rounded-3xl bg-white border border-neutral-300 shadow-xs space-y-6">
+            <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 pb-4 border-b border-neutral-200">
+              <div className="flex items-center gap-3">
+                <div className="h-11 w-11 rounded-2xl bg-black text-white flex items-center justify-center">
+                  <Heart className="h-5 w-5 fill-white" />
                 </div>
-
-                <div className="flex gap-2">
-                  <span className="text-xs font-mono font-bold bg-neutral-100 text-black px-3 py-1 rounded-xl border border-neutral-300">
-                    Arif Ahmed • 37 Years
-                  </span>
+                <div>
+                  <h3 className="text-lg sm:text-xl font-extrabold text-black">
+                    Family Impact & The Human Angle
+                  </h3>
+                  <p className="text-xs text-neutral-500">Farhana Aktar, their 2 infant boys, and a family fighting for survival</p>
                 </div>
               </div>
 
-              {/* Photo Gallery Grid */}
-              <div className="space-y-3">
-                <div className="flex items-center gap-2">
-                  <Camera className="h-4 w-4 text-black" />
-                  <h4 className="text-xs font-mono font-bold uppercase text-black tracking-wider">
-                    Authentic Case Photos (Click to Enlarge)
-                  </h4>
-                </div>
-
-                <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-                  {galleryImages.map((img, i) => (
-                    <div
-                      key={i}
-                      onClick={() => setSelectedImage(img)}
-                      className="group cursor-pointer rounded-2xl border border-neutral-300 bg-neutral-50 overflow-hidden hover:border-black hover:shadow-md transition-all flex flex-col justify-between"
-                    >
-                      <div className="relative h-56 w-full overflow-hidden bg-neutral-200">
-                        <img
-                          src={img.src}
-                          alt={img.title}
-                          className="h-full w-full object-cover object-top transition-transform duration-300 group-hover:scale-105"
-                        />
-                        <div className="absolute top-2 left-2">
-                          <span className="text-[10px] font-mono font-bold uppercase bg-black/80 text-white px-2 py-0.5 rounded backdrop-blur-xs">
-                            {img.tag}
-                          </span>
-                        </div>
-                        <div className="absolute top-2 right-2 opacity-0 group-hover:opacity-100 transition-opacity p-1.5 rounded-lg bg-white/90 text-black shadow-xs">
-                          <Maximize2 className="h-3.5 w-3.5" />
-                        </div>
-                      </div>
-
-                      <div className="p-3.5 space-y-1">
-                        <h5 className="text-xs font-bold text-black group-hover:underline leading-snug">
-                          {img.title}
-                        </h5>
-                        <p className="text-[11px] text-neutral-600 leading-snug">
-                          {img.subtitle}
-                        </p>
-                      </div>
-                    </div>
-                  ))}
-                </div>
-              </div>
-
-              <div className="prose prose-sm max-w-none text-neutral-800 text-xs sm:text-sm leading-relaxed space-y-4 pt-4 border-t border-neutral-200">
-                <p>
-                  <strong>Arif Ahmed is only 37 years old.</strong> He is a husband, a father of two very young children, and the person his family has always depended on.
-                </p>
-
-                <p>
-                  His wife, <strong>Farhana Aktar</strong>, is caring for their two sons — an elder son of <strong>3.5 years</strong> and a baby of just <strong>10 months</strong>. For this young family, Arif is not simply the person who earns their living; he is the centre of their family and the person they look to for their future.
-                </p>
-
-                <div className="p-4 rounded-2xl bg-neutral-50 border border-neutral-200 space-y-2">
-                  <h4 className="text-xs font-bold text-black uppercase tracking-wide">Previous Sacrifices & Financial Strain</h4>
-                  <p className="text-xs text-neutral-700 leading-relaxed">
-                    The past two years had already been a difficult journey for Arif. He spent almost two years ashore preparing for and completing his <strong>Class 2 Deck Officer examination</strong>. During that period, he faced serious financial pressure, accumulated approximately <strong>BDT 10 lakh in hand loans</strong>, and the family even had to sell his wife's gold jewellery to manage their circumstances.
-                  </p>
-                  <p className="text-xs text-neutral-700 leading-relaxed">
-                    After all those sacrifices, Arif finally achieved his Class 2 certificate and returned to sea on <em>M.V. Meghna Fortune</em>. He had served for only a few months when his health suddenly began to deteriorate. What should have been the beginning of a new chapter has instead become an unexpected medical crisis.
-                  </p>
-                </div>
-
-                <p>
-                  Arif has also carried the responsibility of caring for his parents, both of whom required kidney dialysis. His younger brother, who lives abroad and is still a student, is doing whatever he can to help support the family. But the medical expenses arising from Arif's present condition are far beyond what the family can manage with their available resources.
-                </p>
-
-                <p>
-                  His diagnosis is still undergoing confirmation, and the final treatment plan and cost are not yet known. What the family does know is that he needs continued medical investigation and specialist care, and that the expenses will be substantial. They have already exhausted most of what they had, and they are now even trying to sell their only remaining property — a modest house plot in their village — to help meet his medical needs.
-                </p>
-
-                <div className="p-5 rounded-2xl bg-neutral-900 text-white space-y-2 text-center">
-                  <p className="text-xs sm:text-sm font-medium italic">
-                    "They want to do everything within their ability to give Arif the chance to recover and return to a normal life. His two sons are still too young to understand what is happening. They need their father. His wife needs her husband. And at just 37 years of age, Arif still has so much life ahead of him."
-                  </p>
-                  <p className="text-xs font-bold text-white uppercase tracking-wider font-mono">
-                    They need him. And they are not ready to give up on him.
-                  </p>
-                </div>
-              </div>
-
-              <div className="flex justify-center pt-2">
-                <a
-                  href="#donate"
-                  className="px-6 py-3.5 rounded-2xl bg-black text-white hover:bg-neutral-800 text-xs font-bold transition-all shadow-md flex items-center gap-2 cursor-pointer"
-                >
-                  <Heart className="h-4 w-4 fill-white" /> Contribute to Arif Bhai's Treatment Fund
-                </a>
+              <div className="flex gap-2">
+                <span className="text-xs font-mono font-bold bg-neutral-100 text-black px-3 py-1 rounded-xl border border-neutral-300">
+                  Arif Ahmed • 37 Years
+                </span>
               </div>
             </div>
-          </div>
-        )}
 
-        {/* Image Zoom Lightbox Modal */}
-        {selectedImage && (
-          <div 
-            className="fixed inset-0 z-50 bg-black/85 backdrop-blur-xs flex items-center justify-center p-4 sm:p-6"
-            onClick={() => setSelectedImage(null)}
-          >
-            <div 
-              className="relative max-w-2xl w-full bg-white rounded-3xl overflow-hidden shadow-2xl border-2 border-black space-y-0"
-              onClick={(e) => e.stopPropagation()}
-            >
-              {/* Modal Header */}
-              <div className="flex items-center justify-between p-4 border-b border-neutral-200">
-                <div className="flex items-center gap-2">
-                  <span className="text-xs font-mono font-bold uppercase bg-black text-white px-2.5 py-0.5 rounded">
-                    {selectedImage.tag}
-                  </span>
-                  <span className="text-xs font-bold text-black">{selectedImage.title}</span>
-                </div>
-                <button
-                  onClick={() => setSelectedImage(null)}
-                  className="p-1.5 rounded-xl hover:bg-neutral-100 text-neutral-700 hover:text-black transition-colors cursor-pointer"
-                >
-                  <X className="h-5 w-5" />
-                </button>
+            <div className="prose prose-sm max-w-none text-neutral-800 text-xs sm:text-sm leading-relaxed space-y-4">
+              <p>
+                <strong>Arif Ahmed is only 37 years old.</strong> He is a husband, a father of two very young children, and the person his family has always depended on.
+              </p>
+
+              <p>
+                His wife, <strong>Farhana Aktar</strong>, is caring for their two sons — an elder son of <strong>3.5 years</strong> and a baby of just <strong>10 months</strong>. For this young family, Arif is not simply the person who earns their living; he is the centre of their family and the person they look to for their future.
+              </p>
+
+              <div className="p-4 rounded-2xl bg-neutral-50 border border-neutral-200 space-y-2">
+                <h4 className="text-xs font-bold text-black uppercase tracking-wide">Previous Sacrifices & Financial Strain</h4>
+                <p className="text-xs text-neutral-700 leading-relaxed">
+                  The past two years had already been a difficult journey for Arif. He spent almost two years ashore preparing for and completing his <strong>Class 2 Deck Officer examination</strong>. During that period, he faced serious financial pressure, accumulated approximately <strong>BDT 10 lakh in hand loans</strong>, and the family even had to sell his wife's gold jewellery to manage their circumstances.
+                </p>
+                <p className="text-xs text-neutral-700 leading-relaxed">
+                  After all those sacrifices, Arif finally achieved his Class 2 certificate and returned to sea on <em>M.V. Meghna Fortune</em>. He had served for only a few months when his health suddenly began to deteriorate. What should have been the beginning of a new chapter has instead become an unexpected medical crisis.
+                </p>
               </div>
 
-              {/* Modal Image */}
-              <div className="max-h-[70vh] bg-neutral-900 flex items-center justify-center overflow-hidden">
-                <img
-                  src={selectedImage.src}
-                  alt={selectedImage.title}
-                  className="max-h-[70vh] w-auto max-w-full object-contain"
-                />
-              </div>
+              <p>
+                Arif has also carried the responsibility of caring for his parents, both of whom required kidney dialysis. His younger brother, who lives abroad and is still a student, is doing whatever he can to help support the family. But the medical expenses arising from Arif's present condition are far beyond what the family can manage with their available resources.
+              </p>
 
-              {/* Modal Caption */}
-              <div className="p-4 bg-neutral-50 text-xs text-neutral-800 border-t border-neutral-200 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3">
-                <p className="text-neutral-700">{selectedImage.subtitle}</p>
-                <a
-                  href="#donate"
-                  onClick={() => setSelectedImage(null)}
-                  className="px-4 py-2 rounded-xl bg-black text-white text-xs font-bold shrink-0 hover:bg-neutral-800 transition-colors flex items-center gap-1.5 cursor-pointer"
-                >
-                  <Heart className="h-3.5 w-3.5 fill-white" /> Support Family
-                </a>
+              <p>
+                His diagnosis is still undergoing confirmation, and the final treatment plan and cost are not yet known. What the family does know is that he needs continued medical investigation and specialist care, and that the expenses will be substantial. They have already exhausted most of what they had, and they are now even trying to sell their only remaining property — a modest house plot in their village — to help meet his medical needs.
+              </p>
+
+              <div className="p-5 rounded-2xl bg-neutral-900 text-white space-y-2 text-center">
+                <p className="text-xs sm:text-sm font-medium italic">
+                  "They want to do everything within their ability to give Arif the chance to recover and return to a normal life. His two sons are still too young to understand what is happening. They need their father. His wife needs her husband. And at just 37 years of age, Arif still has so much life ahead of him."
+                </p>
+                <p className="text-xs font-bold text-white uppercase tracking-wider font-mono">
+                  They need him. And they are not ready to give up on him.
+                </p>
               </div>
+            </div>
+
+            <div className="flex justify-center pt-2">
+              <a
+                href="#donate"
+                className="px-6 py-3.5 rounded-2xl bg-black text-white hover:bg-neutral-800 text-xs font-bold transition-all shadow-md flex items-center gap-2 cursor-pointer"
+              >
+                <Heart className="h-4 w-4 fill-white" /> Contribute to Arif Bhai's Treatment Fund
+              </a>
             </div>
           </div>
         )}
@@ -606,4 +466,5 @@ export function PatientPortfolio({ campaign }) {
     </section>
   );
 }
+
 
