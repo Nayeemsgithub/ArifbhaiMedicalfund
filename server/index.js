@@ -229,6 +229,38 @@ app.post('/api/donations', (req, res) => {
   }
 });
 
+// Edit fund/donation entry (Admin)
+app.put('/api/donations/:id', (req, res) => {
+  try {
+    const { id } = req.params;
+    const index = donationsState.findIndex((d) => d.id === id);
+
+    if (index === -1) {
+      return res.status(404).json({ error: 'Fund entry not found' });
+    }
+
+    const { donorName, amount, message, isAnonymous } = req.body;
+
+    donationsState[index] = {
+      ...donationsState[index],
+      ...(donorName !== undefined && { donorName: donorName.trim() || 'Anonymous Supporter' }),
+      ...(amount !== undefined && { amount: Number(amount) }),
+      ...(message !== undefined && { message: message.trim() }),
+      ...(isAnonymous !== undefined && { isAnonymous: Boolean(isAnonymous) })
+    };
+
+    const summary = computeFinancialSummary();
+    res.json({
+      success: true,
+      donation: donationsState[index],
+      summary,
+      message: 'Fund entry updated successfully'
+    });
+  } catch (error) {
+    res.status(500).json({ error: 'Failed to update fund entry', details: error.message });
+  }
+});
+
 // Delete fund/donation entry (Admin)
 app.delete('/api/donations/:id', (req, res) => {
   try {

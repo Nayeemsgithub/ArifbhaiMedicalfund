@@ -46,8 +46,28 @@ function MainContent() {
     if (updatedSummary) setSummary(updatedSummary);
   };
 
+  const handleFundUpdated = (updatedDonation, updatedSummary) => {
+    setDonations((prev) => prev.map((d) => (d.id === updatedDonation.id ? updatedDonation : d)));
+    if (updatedSummary) setSummary(updatedSummary);
+  };
+
   const handleFundDeleted = (deletedId, updatedSummary) => {
     setDonations((prev) => prev.filter((d) => d.id !== deletedId));
+    if (updatedSummary) setSummary(updatedSummary);
+  };
+
+  const handleExpenseAdded = (newExp, updatedSummary) => {
+    setExpenses((prev) => [newExp, ...prev]);
+    if (updatedSummary) setSummary(updatedSummary);
+  };
+
+  const handleExpenseUpdated = (updatedExp, updatedSummary) => {
+    setExpenses((prev) => prev.map((e) => (e.id === updatedExp.id ? updatedExp : e)));
+    if (updatedSummary) setSummary(updatedSummary);
+  };
+
+  const handleExpenseDeleted = (deletedId, updatedSummary) => {
+    setExpenses((prev) => prev.filter((e) => e.id !== deletedId));
     if (updatedSummary) setSummary(updatedSummary);
   };
 
@@ -79,15 +99,11 @@ function MainContent() {
         expenses={expenses}
         onCampaignUpdated={handleCampaignUpdated}
         onFundAdded={handleFundAdded}
+        onFundUpdated={handleFundUpdated}
         onFundDeleted={handleFundDeleted}
-        onExpenseAdded={(newExp, updSummary) => {
-          setExpenses((prev) => [newExp, ...prev]);
-          if (updSummary) setSummary(updSummary);
-        }}
-        onExpenseDeleted={(delId, updSummary) => {
-          setExpenses((prev) => prev.filter((e) => e.id !== delId));
-          if (updSummary) setSummary(updSummary);
-        }}
+        onExpenseAdded={handleExpenseAdded}
+        onExpenseUpdated={handleExpenseUpdated}
+        onExpenseDeleted={handleExpenseDeleted}
       />
 
       <main className="flex-grow space-y-4">

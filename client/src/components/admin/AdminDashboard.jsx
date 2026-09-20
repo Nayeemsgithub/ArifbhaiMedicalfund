@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Settings, Plus, Trash2, CheckCircle2, Save, DollarSign, Receipt, KeyRound, AlertCircle, User, ShieldCheck } from 'lucide-react';
+import { Settings, Plus, Trash2, Edit3, CheckCircle2, Save, DollarSign, Receipt, KeyRound, AlertCircle, X } from 'lucide-react';
 import { useAuth } from '../../context/AuthContext';
 import { Card } from '../ui/Card';
 import { Button } from '../ui/Button';
@@ -11,8 +11,10 @@ export function AdminDashboard({
   expenses,
   onCampaignUpdated,
   onFundAdded,
+  onFundUpdated,
   onFundDeleted,
   onExpenseAdded,
+  onExpenseUpdated,
   onExpenseDeleted
 }) {
   const { user, logout, isAdmin } = useAuth();
@@ -44,6 +46,10 @@ export function AdminDashboard({
     isAnonymous: false
   });
 
+  // Fund Edit State
+  const [editingFundId, setEditingFundId] = useState(null);
+  const [editFundForm, setEditFundForm] = useState({});
+
   // Expense State
   const [showAddExpense, setShowAddExpense] = useState(false);
   const [savingExpense, setSavingExpense] = useState(false);
@@ -55,6 +61,10 @@ export function AdminDashboard({
     vendor: 'Hospital / Pharmacy',
     description: ''
   });
+
+  // Expense Edit State
+  const [editingExpenseId, setEditingExpenseId] = useState(null);
+  const [editExpenseForm, setEditExpenseForm] = useState({});
 
   // Password Change State
   const [passwordForm, setPasswordForm] = useState({
@@ -90,6 +100,7 @@ export function AdminDashboard({
     }
   };
 
+  // Fund Operations
   const handleCreateFund = async (e) => {
     e.preventDefault();
     setSavingFund(true);
@@ -124,6 +135,39 @@ export function AdminDashboard({
     }
   };
 
+  const handleStartEditFund = (fund) => {
+    setEditingFundId(fund.id);
+    setEditFundForm({
+      donorName: fund.donorName || '',
+      amount: fund.amount || '',
+      message: fund.message || ''
+    });
+  };
+
+  const handleSaveEditFund = async (id) => {
+    setSavingFund(true);
+    try {
+      const res = await fetch(`/api/donations/${id}`, {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          donorName: editFundForm.donorName,
+          amount: Number(editFundForm.amount),
+          message: editFundForm.message
+        })
+      });
+      const data = await res.json();
+      if (res.ok && data.success) {
+        if (onFundUpdated) onFundUpdated(data.donation, data.summary);
+        setEditingFundId(null);
+      }
+    } catch (err) {
+      console.error('Failed to update fund:', err);
+    } finally {
+      setSavingFund(false);
+    }
+  };
+
   const handleDeleteFund = async (id) => {
     if (!confirm('Remove this fund entry? Total raised will recalculate.')) return;
     try {
@@ -137,6 +181,7 @@ export function AdminDashboard({
     }
   };
 
+  // Expense Operations
   const handleCreateExpense = async (e) => {
     e.preventDefault();
     setSavingExpense(true);
@@ -175,6 +220,43 @@ export function AdminDashboard({
     }
   };
 
+  const handleStartEditExpense = (exp) => {
+    setEditingExpenseId(exp.id);
+    setEditExpenseForm({
+      title: exp.title || '',
+      amount: exp.amount || '',
+      date: exp.date || '',
+      vendor: exp.vendor || '',
+      description: exp.description || ''
+    });
+  };
+
+  const handleSaveEditExpense = async (id) => {
+    setSavingExpense(true);
+    try {
+      const res = await fetch(`/api/expenses/${id}`, {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          title: editExpenseForm.title,
+          amount: Number(editExpenseForm.amount),
+          date: editExpenseForm.date,
+          vendor: editExpenseForm.vendor,
+          description: editExpenseForm.description
+        })
+      });
+      const data = await res.json();
+      if (res.ok && data.success) {
+        if (onExpenseUpdated) onExpenseUpdated(data.expense, data.summary);
+        setEditingExpenseId(null);
+      }
+    } catch (err) {
+      console.error('Failed to update expense:', err);
+    } finally {
+      setSavingExpense(false);
+    }
+  };
+
   const handleDeleteExpense = async (id) => {
     if (!confirm('Delete this medical expense? Total spent and remaining balance will recalculate.')) return;
     try {
@@ -188,6 +270,7 @@ export function AdminDashboard({
     }
   };
 
+  // Password Operations
   const handleChangePassword = async (e) => {
     e.preventDefault();
     setPasswordError(null);
@@ -247,7 +330,7 @@ export function AdminDashboard({
                   Logged in as {user?.username || 'Asif'}
                 </span>
               </div>
-              <p className="text-xs text-neutral-600">Add funds raised, record medical expenses & update patient profile</p>
+              <p className="text-xs text-neutral-600">Add, edit, or delete funds raised and medical expenses</p>
             </div>
           </div>
 
@@ -313,7 +396,7 @@ export function AdminDashboard({
             <div className="flex justify-between items-center">
               <div>
                 <h4 className="text-xs font-bold uppercase tracking-wider text-black">Total Funds Raised Management</h4>
-                <p className="text-xs text-neutral-600">Record community donations & wire transfers to update Total Funds Raised</p>
+                <p className="text-xs text-neutral-600">Add, edit, or remove fund contributions to update Total Funds Raised</p>
               </div>
               <Button
                 variant="primary"
@@ -387,31 +470,75 @@ export function AdminDashboard({
                 {donations.map((don) => (
                   <div
                     key={don.id}
-                    className="p-3.5 rounded-xl bg-white border border-neutral-300 shadow-xs flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3"
+                    className="p-3.5 rounded-xl bg-white border border-neutral-300 shadow-xs flex flex-col justify-between gap-3"
                   >
-                    <div className="space-y-0.5">
-                      <div className="flex items-center gap-2">
-                        <span className="font-bold text-black text-xs">{don.donorName || 'Direct Contributor'}</span>
-                        <span className="text-[10px] font-mono bg-neutral-100 text-black px-1.5 py-0.5 rounded border border-neutral-300">
-                          {new Date(don.createdAt).toLocaleDateString(undefined, { month: 'short', day: 'numeric', year: 'numeric' })}
-                        </span>
+                    {editingFundId === don.id ? (
+                      <div className="space-y-3">
+                        <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                          <Input
+                            label="Amount (৳ BDT) *"
+                            type="number"
+                            value={editFundForm.amount}
+                            onChange={(e) => setEditFundForm({ ...editFundForm, amount: e.target.value })}
+                          />
+                          <Input
+                            label="Contributor Name"
+                            value={editFundForm.donorName}
+                            onChange={(e) => setEditFundForm({ ...editFundForm, donorName: e.target.value })}
+                          />
+                        </div>
+                        <Textarea
+                          label="Note / Message"
+                          rows={2}
+                          value={editFundForm.message}
+                          onChange={(e) => setEditFundForm({ ...editFundForm, message: e.target.value })}
+                        />
+                        <div className="flex justify-end gap-2">
+                          <Button variant="outline" size="sm" onClick={() => setEditingFundId(null)}>
+                            Cancel
+                          </Button>
+                          <Button variant="primary" size="sm" icon={Save} isLoading={savingFund} onClick={() => handleSaveEditFund(don.id)}>
+                            Save Changes
+                          </Button>
+                        </div>
                       </div>
-                      <p className="text-xs text-neutral-600">{don.message || 'Direct contribution'}</p>
-                    </div>
+                    ) : (
+                      <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3">
+                        <div className="space-y-0.5">
+                          <div className="flex items-center gap-2">
+                            <span className="font-bold text-black text-xs">{don.donorName || 'Direct Contributor'}</span>
+                            <span className="text-[10px] font-mono bg-neutral-100 text-black px-1.5 py-0.5 rounded border border-neutral-300">
+                              {new Date(don.createdAt).toLocaleDateString(undefined, { month: 'short', day: 'numeric', year: 'numeric' })}
+                            </span>
+                          </div>
+                          <p className="text-xs text-neutral-600">{don.message || 'Direct contribution'}</p>
+                        </div>
 
-                    <div className="flex items-center gap-3 shrink-0">
-                      <span className="font-mono text-sm font-bold text-black bg-neutral-100 px-3 py-1 rounded-xl border border-neutral-300">
-                        +৳{Number(don.amount).toLocaleString()}
-                      </span>
-                      <Button
-                        variant="destructive"
-                        size="sm"
-                        icon={Trash2}
-                        onClick={() => handleDeleteFund(don.id)}
-                        className="text-xs"
-                        title="Delete fund entry"
-                      />
-                    </div>
+                        <div className="flex items-center gap-2 shrink-0">
+                          <span className="font-mono text-sm font-bold text-black bg-neutral-100 px-3 py-1 rounded-xl border border-neutral-300">
+                            +৳{Number(don.amount).toLocaleString()}
+                          </span>
+                          <Button
+                            variant="outline"
+                            size="sm"
+                            icon={Edit3}
+                            onClick={() => handleStartEditFund(don)}
+                            className="text-xs"
+                            title="Edit fund entry"
+                          >
+                            Edit
+                          </Button>
+                          <Button
+                            variant="destructive"
+                            size="sm"
+                            icon={Trash2}
+                            onClick={() => handleDeleteFund(don.id)}
+                            className="text-xs"
+                            title="Delete fund entry"
+                          />
+                        </div>
+                      </div>
+                    )}
                   </div>
                 ))}
               </div>
@@ -425,7 +552,7 @@ export function AdminDashboard({
             <div className="flex justify-between items-center">
               <div>
                 <h4 className="text-xs font-bold uppercase tracking-wider text-black">Total Medical Expenses Management</h4>
-                <p className="text-xs text-neutral-600">Record hospital fees, biopsy, PET-CT and pharmacy bills to update Total Expenses and Remaining Balance</p>
+                <p className="text-xs text-neutral-600">Add, edit, or delete medical expenses to update Total Expenses and Remaining Balance</p>
               </div>
               <Button
                 variant="primary"
@@ -514,31 +641,87 @@ export function AdminDashboard({
                 {expenses.map((exp) => (
                   <div
                     key={exp.id}
-                    className="p-3.5 rounded-xl bg-white border border-neutral-300 shadow-xs flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3"
+                    className="p-3.5 rounded-xl bg-white border border-neutral-300 shadow-xs flex flex-col justify-between gap-3"
                   >
-                    <div className="space-y-0.5">
-                      <div className="flex items-center gap-2">
-                        <span className="font-bold text-black text-xs">{exp.title}</span>
-                        <span className="text-[10px] font-mono bg-neutral-100 text-black px-1.5 py-0.5 rounded border border-neutral-300">
-                          {exp.date}
-                        </span>
+                    {editingExpenseId === exp.id ? (
+                      <div className="space-y-3">
+                        <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
+                          <Input
+                            label="Title *"
+                            value={editExpenseForm.title}
+                            onChange={(e) => setEditExpenseForm({ ...editExpenseForm, title: e.target.value })}
+                          />
+                          <Input
+                            label="Amount (৳ BDT) *"
+                            type="number"
+                            value={editExpenseForm.amount}
+                            onChange={(e) => setEditExpenseForm({ ...editExpenseForm, amount: e.target.value })}
+                          />
+                          <Input
+                            label="Date"
+                            type="date"
+                            value={editExpenseForm.date}
+                            onChange={(e) => setEditExpenseForm({ ...editExpenseForm, date: e.target.value })}
+                          />
+                        </div>
+                        <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                          <Input
+                            label="Hospital / Vendor"
+                            value={editExpenseForm.vendor}
+                            onChange={(e) => setEditExpenseForm({ ...editExpenseForm, vendor: e.target.value })}
+                          />
+                          <Input
+                            label="Description / Notes"
+                            value={editExpenseForm.description}
+                            onChange={(e) => setEditExpenseForm({ ...editExpenseForm, description: e.target.value })}
+                          />
+                        </div>
+                        <div className="flex justify-end gap-2">
+                          <Button variant="outline" size="sm" onClick={() => setEditingExpenseId(null)}>
+                            Cancel
+                          </Button>
+                          <Button variant="primary" size="sm" icon={Save} isLoading={savingExpense} onClick={() => handleSaveEditExpense(exp.id)}>
+                            Save Changes
+                          </Button>
+                        </div>
                       </div>
-                      <p className="text-xs text-neutral-600">{exp.vendor} {exp.description && `• ${exp.description}`}</p>
-                    </div>
+                    ) : (
+                      <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3">
+                        <div className="space-y-0.5">
+                          <div className="flex items-center gap-2">
+                            <span className="font-bold text-black text-xs">{exp.title}</span>
+                            <span className="text-[10px] font-mono bg-neutral-100 text-black px-1.5 py-0.5 rounded border border-neutral-300">
+                              {exp.date}
+                            </span>
+                          </div>
+                          <p className="text-xs text-neutral-600">{exp.vendor} {exp.description && `• ${exp.description}`}</p>
+                        </div>
 
-                    <div className="flex items-center gap-3 shrink-0">
-                      <span className="font-mono text-sm font-bold text-black bg-neutral-100 px-3 py-1 rounded-xl border border-neutral-300">
-                        -৳{Number(exp.amount).toLocaleString()}
-                      </span>
-                      <Button
-                        variant="destructive"
-                        size="sm"
-                        icon={Trash2}
-                        onClick={() => handleDeleteExpense(exp.id)}
-                        className="text-xs"
-                        title="Delete expense entry"
-                      />
-                    </div>
+                        <div className="flex items-center gap-2 shrink-0">
+                          <span className="font-mono text-sm font-bold text-black bg-neutral-100 px-3 py-1 rounded-xl border border-neutral-300">
+                            -৳{Number(exp.amount).toLocaleString()}
+                          </span>
+                          <Button
+                            variant="outline"
+                            size="sm"
+                            icon={Edit3}
+                            onClick={() => handleStartEditExpense(exp)}
+                            className="text-xs"
+                            title="Edit expense entry"
+                          >
+                            Edit
+                          </Button>
+                          <Button
+                            variant="destructive"
+                            size="sm"
+                            icon={Trash2}
+                            onClick={() => handleDeleteExpense(exp.id)}
+                            className="text-xs"
+                            title="Delete expense entry"
+                          />
+                        </div>
+                      </div>
+                    )}
                   </div>
                 ))}
               </div>
