@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Settings, Plus, Trash2, CheckCircle2, Save, DollarSign, KeyRound, AlertCircle, User, ShieldCheck } from 'lucide-react';
+import { Settings, Plus, Trash2, CheckCircle2, Save, DollarSign, Receipt, KeyRound, AlertCircle, User, ShieldCheck } from 'lucide-react';
 import { useAuth } from '../../context/AuthContext';
 import { Card } from '../ui/Card';
 import { Button } from '../ui/Button';
@@ -8,9 +8,12 @@ import { Input, Textarea } from '../ui/Input';
 export function AdminDashboard({
   campaign,
   donations,
+  expenses,
   onCampaignUpdated,
   onFundAdded,
-  onFundDeleted
+  onFundDeleted,
+  onExpenseAdded,
+  onExpenseDeleted
 }) {
   const { user, logout, isAdmin } = useAuth();
   const [activeTab, setActiveTab] = useState('funds');
@@ -39,6 +42,18 @@ export function AdminDashboard({
     amount: '',
     message: '',
     isAnonymous: false
+  });
+
+  // Expense State
+  const [showAddExpense, setShowAddExpense] = useState(false);
+  const [savingExpense, setSavingExpense] = useState(false);
+  const [expenseMsg, setExpenseMsg] = useState(null);
+  const [newExpense, setNewExpense] = useState({
+    title: '',
+    amount: '',
+    date: new Date().toISOString().split('T')[0],
+    vendor: 'Hospital / Pharmacy',
+    description: ''
   });
 
   // Password Change State
@@ -122,6 +137,57 @@ export function AdminDashboard({
     }
   };
 
+  const handleCreateExpense = async (e) => {
+    e.preventDefault();
+    setSavingExpense(true);
+    setExpenseMsg(null);
+    try {
+      const res = await fetch('/api/expenses', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          title: newExpense.title.trim(),
+          category: 'Medical Treatment',
+          amount: Number(newExpense.amount),
+          date: newExpense.date,
+          vendor: newExpense.vendor.trim() || 'Hospital / Clinic',
+          invoiceNumber: `EXP-${Date.now().toString().slice(-6)}`,
+          description: newExpense.description.trim() || 'Medical care and clinical expense'
+        })
+      });
+      const data = await res.json();
+      if (res.ok && data.success) {
+        setExpenseMsg(`Recorded ৳${Number(newExpense.amount).toLocaleString()} in Medical Expenses!`);
+        if (onExpenseAdded) onExpenseAdded(data.expense, data.summary);
+        setNewExpense({
+          title: '',
+          amount: '',
+          date: new Date().toISOString().split('T')[0],
+          vendor: 'Hospital / Pharmacy',
+          description: ''
+        });
+        setShowAddExpense(false);
+      }
+    } catch (err) {
+      console.error('Failed to record expense:', err);
+    } finally {
+      setSavingExpense(false);
+    }
+  };
+
+  const handleDeleteExpense = async (id) => {
+    if (!confirm('Delete this medical expense? Total spent and remaining balance will recalculate.')) return;
+    try {
+      const res = await fetch(`/api/expenses/${id}`, { method: 'DELETE' });
+      const data = await res.json();
+      if (res.ok && data.success) {
+        if (onExpenseDeleted) onExpenseDeleted(id, data.summary);
+      }
+    } catch (err) {
+      console.error('Failed to delete expense:', err);
+    }
+  };
+
   const handleChangePassword = async (e) => {
     e.preventDefault();
     setPasswordError(null);
@@ -181,7 +247,7 @@ export function AdminDashboard({
                   Logged in as {user?.username || 'Asif'}
                 </span>
               </div>
-              <p className="text-xs text-neutral-600">Add community funds raised & update patient case profile</p>
+              <p className="text-xs text-neutral-600">Add funds raised, record medical expenses & update patient profile</p>
             </div>
           </div>
 
@@ -208,6 +274,16 @@ export function AdminDashboard({
             }`}
           >
             💰 Add & Manage Funds ({donations?.length || 0})
+          </button>
+          <button
+            onClick={() => setActiveTab('expenses')}
+            className={`px-3.5 py-1.5 rounded-xl text-xs font-bold transition-all ${
+              activeTab === 'expenses'
+                ? 'bg-black text-white shadow-xs border border-black'
+                : 'bg-white text-black hover:bg-neutral-200 border border-neutral-300'
+            }`}
+          >
+            💸 Add & Manage Expenses ({expenses?.length || 0})
           </button>
           <button
             onClick={() => setActiveTab('campaign')}
@@ -343,7 +419,134 @@ export function AdminDashboard({
           </div>
         )}
 
-        {/* Tab 2: Edit Patient Details */}
+        {/* Tab 2: Add & Manage Expenses */}
+        {activeTab === 'expenses' && (
+          <div className="space-y-3">
+            <div className="flex justify-between items-center">
+              <div>
+                <h4 className="text-xs font-bold uppercase tracking-wider text-black">Total Medical Expenses Management</h4>
+                <p className="text-xs text-neutral-600">Record hospital fees, biopsy, PET-CT and pharmacy bills to update Total Expenses and Remaining Balance</p>
+              </div>
+              <Button
+                variant="primary"
+                size="sm"
+                icon={Plus}
+                onClick={() => setShowAddExpense(!showAddExpense)}
+              >
+                {showAddExpense ? 'Close' : 'Record Expense'}
+              </Button>
+            </div>
+
+            {expenseMsg && (
+              <div className="p-3 rounded-xl bg-neutral-100 border border-black flex items-center justify-between text-xs font-bold text-black">
+                <span className="flex items-center gap-1.5">
+                  <CheckCircle2 className="h-4 w-4 text-black" /> {expenseMsg}
+                </span>
+                <button onClick={() => setExpenseMsg(null)} className="text-neutral-500 hover:text-black">Dismiss</button>
+              </div>
+            )}
+
+            {/* Add New Expense Form */}
+            {showAddExpense && (
+              <Card className="p-5 bg-white rounded-2xl border border-black shadow-xs">
+                <form onSubmit={handleCreateExpense} className="space-y-3">
+                  <h5 className="text-xs font-bold text-black uppercase tracking-wide">Record New Medical Expense</h5>
+                  <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
+                    <Input
+                      label="Expense Title / Description *"
+                      required
+                      placeholder="e.g. PET-CT Scan & Liver Biopsy"
+                      value={newExpense.title}
+                      onChange={(e) => setNewExpense({ ...newExpense, title: e.target.value })}
+                    />
+                    <Input
+                      label="Amount (৳ BDT) *"
+                      type="number"
+                      min="1"
+                      required
+                      placeholder="e.g. 35000"
+                      value={newExpense.amount}
+                      onChange={(e) => setNewExpense({ ...newExpense, amount: e.target.value })}
+                    />
+                    <Input
+                      label="Date *"
+                      type="date"
+                      required
+                      value={newExpense.date}
+                      onChange={(e) => setNewExpense({ ...newExpense, date: e.target.value })}
+                    />
+                  </div>
+
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                    <Input
+                      label="Hospital / Lab / Vendor (Optional)"
+                      placeholder="e.g. Diagnostic Center / Apollo"
+                      value={newExpense.vendor}
+                      onChange={(e) => setNewExpense({ ...newExpense, vendor: e.target.value })}
+                    />
+                    <Input
+                      label="Notes / Procedure (Optional)"
+                      placeholder="e.g. Core biopsy histopathology & IHC testing"
+                      value={newExpense.description}
+                      onChange={(e) => setNewExpense({ ...newExpense, description: e.target.value })}
+                    />
+                  </div>
+
+                  <div className="flex justify-end gap-2 pt-1">
+                    <Button type="button" variant="outline" size="sm" onClick={() => setShowAddExpense(false)}>
+                      Cancel
+                    </Button>
+                    <Button type="submit" variant="primary" size="sm" isLoading={savingExpense} icon={Receipt}>
+                      Record Expense
+                    </Button>
+                  </div>
+                </form>
+              </Card>
+            )}
+
+            {/* Expenses List */}
+            {(!expenses || expenses.length === 0) ? (
+              <div className="p-8 text-center bg-white rounded-2xl border border-neutral-300 text-xs text-neutral-600">
+                No medical expenses currently recorded. Click <strong>"Record Expense"</strong> above to record hospital or clinical costs.
+              </div>
+            ) : (
+              <div className="space-y-2">
+                {expenses.map((exp) => (
+                  <div
+                    key={exp.id}
+                    className="p-3.5 rounded-xl bg-white border border-neutral-300 shadow-xs flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3"
+                  >
+                    <div className="space-y-0.5">
+                      <div className="flex items-center gap-2">
+                        <span className="font-bold text-black text-xs">{exp.title}</span>
+                        <span className="text-[10px] font-mono bg-neutral-100 text-black px-1.5 py-0.5 rounded border border-neutral-300">
+                          {exp.date}
+                        </span>
+                      </div>
+                      <p className="text-xs text-neutral-600">{exp.vendor} {exp.description && `• ${exp.description}`}</p>
+                    </div>
+
+                    <div className="flex items-center gap-3 shrink-0">
+                      <span className="font-mono text-sm font-bold text-black bg-neutral-100 px-3 py-1 rounded-xl border border-neutral-300">
+                        -৳{Number(exp.amount).toLocaleString()}
+                      </span>
+                      <Button
+                        variant="destructive"
+                        size="sm"
+                        icon={Trash2}
+                        onClick={() => handleDeleteExpense(exp.id)}
+                        className="text-xs"
+                        title="Delete expense entry"
+                      />
+                    </div>
+                  </div>
+                ))}
+              </div>
+            )}
+          </div>
+        )}
+
+        {/* Tab 3: Edit Patient Details */}
         {activeTab === 'campaign' && (
           <Card className="bg-white p-5 rounded-2xl border border-black shadow-xs">
             <form onSubmit={handleSaveCampaign} className="space-y-3.5">
@@ -410,7 +613,7 @@ export function AdminDashboard({
           </Card>
         )}
 
-        {/* Tab 3: Security & Change Password */}
+        {/* Tab 4: Security & Change Password */}
         {activeTab === 'password' && (
           <Card className="bg-white p-5 rounded-2xl border border-black shadow-xs max-w-xl">
             <form onSubmit={handleChangePassword} className="space-y-4">

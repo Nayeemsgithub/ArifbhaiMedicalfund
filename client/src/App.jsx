@@ -76,9 +76,18 @@ function MainContent() {
       <AdminDashboard
         campaign={campaign}
         donations={donations}
+        expenses={expenses}
         onCampaignUpdated={handleCampaignUpdated}
         onFundAdded={handleFundAdded}
         onFundDeleted={handleFundDeleted}
+        onExpenseAdded={(newExp, updSummary) => {
+          setExpenses((prev) => [newExp, ...prev]);
+          if (updSummary) setSummary(updSummary);
+        }}
+        onExpenseDeleted={(delId, updSummary) => {
+          setExpenses((prev) => prev.filter((e) => e.id !== delId));
+          if (updSummary) setSummary(updSummary);
+        }}
       />
 
       <main className="flex-grow space-y-4">
