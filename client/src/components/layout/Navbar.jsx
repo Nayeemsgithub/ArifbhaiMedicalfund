@@ -10,7 +10,6 @@ export function Navbar() {
   const navLinks = [
     { label: "Donate", href: "#donate" },
     { label: "Case Portfolio", href: "#patient-profile" },
-    { label: "Photo Gallery", href: "#photo-gallery" },
     { label: "Funds Feed", href: "#donors" }
   ];
 

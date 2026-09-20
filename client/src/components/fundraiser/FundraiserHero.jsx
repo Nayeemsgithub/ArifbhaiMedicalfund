@@ -52,14 +52,8 @@ export function FundraiserHero({ campaign, summary }) {
               <Heart className="h-4 w-4 fill-white" /> Donate to Family
             </a>
             <a
-              href="#photo-gallery"
-              className="px-6 py-3 rounded-2xl bg-neutral-100 hover:bg-neutral-200 border border-neutral-300 text-black text-xs font-bold transition-all flex items-center justify-center gap-2 cursor-pointer text-center"
-            >
-              <Camera className="h-4 w-4" /> View Photo Gallery
-            </a>
-            <a
               href="#patient-profile"
-              className="px-6 py-3 rounded-2xl bg-neutral-50 hover:bg-neutral-100 border border-neutral-200 text-neutral-700 text-xs font-bold transition-all flex items-center justify-center gap-2 cursor-pointer text-center"
+              className="px-6 py-3 rounded-2xl bg-neutral-100 hover:bg-neutral-200 border border-neutral-300 text-black text-xs font-bold transition-all flex items-center justify-center gap-2 cursor-pointer text-center"
             >
               <FileText className="h-4 w-4" /> Medical Chronology
             </a>
