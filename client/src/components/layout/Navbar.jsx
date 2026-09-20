@@ -8,11 +8,11 @@ export function Navbar() {
   const [mobileOpen, setMobileOpen] = useState(false);
 
   const navLinks = [
-    { label: "Dashboard", href: "#" },
+    { label: "Donate", href: "#donate" },
+    { label: "Case Portfolio", href: "#patient-profile" },
     { label: "Expenses Ledger", href: "#expenses" },
     { label: "Medical Documents", href: "#documents" },
-    { label: "Funds Feed", href: "#donors" },
-    { label: "Journey", href: "#journey" }
+    { label: "Funds Feed", href: "#donors" }
   ];
 
   return (
@@ -21,7 +21,7 @@ export function Navbar() {
         {/* Brand Text */}
         <a href="#" className="flex items-center gap-2.5">
           <span className="font-extrabold text-lg tracking-tight text-black">
-            Medical Fund & Live Ledger
+            Arif Ahmed Medical Fund
           </span>
           <span className="text-[10px] font-bold font-mono px-2 py-0.5 rounded-full bg-black text-white hidden sm:inline-flex">
             Live

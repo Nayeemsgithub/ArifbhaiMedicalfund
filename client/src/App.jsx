@@ -3,6 +3,8 @@ import { AuthProvider, useAuth } from './context/AuthContext';
 import { Navbar } from './components/layout/Navbar';
 import { FundraiserHero } from './components/fundraiser/FundraiserHero';
 import { LiveSummaryCards } from './components/dashboard/LiveSummaryCards';
+import { DonationBox } from './components/fundraiser/DonationBox';
+import { PatientPortfolio } from './components/fundraiser/PatientPortfolio';
 import { ExpenseLedgerTable } from './components/dashboard/ExpenseLedgerTable';
 import { DocumentGallery } from './components/dashboard/DocumentGallery';
 import { DonorWall } from './components/fundraiser/DonorWall';
@@ -96,7 +98,7 @@ function MainContent() {
 
   return (
     <div className="min-h-screen bg-white text-black flex flex-col selection:bg-black selection:text-white">
-      {/* Top Sticky Navigation with Admin Authentication button */}
+      {/* Top Sticky Navigation */}
       <Navbar />
 
       {/* Admin Management Dashboard (Unlocks when logged in) */}
@@ -115,7 +117,7 @@ function MainContent() {
         onOpenUploadDoc={() => setIsUploadDocOpen(true)}
       />
 
-      <main className="flex-grow">
+      <main className="flex-grow space-y-4">
         {/* Patient Campaign Hero */}
         <FundraiserHero
           campaign={campaign}
@@ -127,7 +129,17 @@ function MainContent() {
           summary={summary}
         />
 
-        {/* Itemized Verified Medical Expenses with Date, Amount, Vendor, and Full Description */}
+        {/* Dedicated Donate Box with Rupali Bank & bKash/Nagad/Rocket */}
+        <DonationBox
+          campaign={campaign}
+        />
+
+        {/* Comprehensive Patient Portfolio (Career, Medical Chronology, Diagnostics, Family Story) */}
+        <PatientPortfolio
+          campaign={campaign}
+        />
+
+        {/* Itemized Verified Medical Expenses Ledger */}
         <ExpenseLedgerTable
           expenses={expenses}
           onOpenAddExpense={() => {
@@ -136,7 +148,7 @@ function MainContent() {
           }}
         />
 
-        {/* Medical Document & Portfolio Gallery (Verified Hospital Invoices, Pathology Scans) */}
+        {/* Medical Document & Portfolio Gallery (Verified Hospital Invoices, Pathology Scans, Biopsy Reports) */}
         <DocumentGallery
           documents={documents}
           onOpenUpload={() => setIsUploadDocOpen(true)}

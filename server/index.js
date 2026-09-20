@@ -173,18 +173,9 @@ app.get('/api/fundraiser', (req, res) => {
 // Update Campaign Info (Admin Protected)
 app.put('/api/campaign', (req, res) => {
   try {
-    const { patientName, patientAge, diagnosis, hospital, leadOncologist, story, targetGoal, status } = req.body;
-
     campaignState = {
       ...campaignState,
-      ...(patientName && { patientName: patientName.trim() }),
-      ...(patientAge && { patientAge: Number(patientAge) }),
-      ...(diagnosis && { diagnosis: diagnosis.trim() }),
-      ...(hospital && { hospital: hospital.trim() }),
-      ...(leadOncologist && { leadOncologist: leadOncologist.trim() }),
-      ...(story && { story: story.trim() }),
-      ...(targetGoal && { targetGoal: Number(targetGoal) }),
-      ...(status && { status: status.trim() })
+      ...req.body
     };
 
     const summary = computeFinancialSummary();
